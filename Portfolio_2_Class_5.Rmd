@@ -492,12 +492,12 @@ Then, loop over all unique species in the dataset and print the number of flower
 
 ```{r}
 
-filter_species <- function(species_name, min_petal) {
+filter_species <- function(species_name, min_petal) { # there needs to be an opening bracket
   filtered <- subset(iris, Species == species_name & Petal.Length > min_petal)
   return(filtered)
 }
 
-for (s in unique(iris$Species)) {   
+for (s in unique(iris$Species)) { # species has to have a capital letter to match the data frame
   flowers <- filter_species(s, 1.5)
   print(paste("Number of flowers for", s, "=", nrow(flowers)))
 }
