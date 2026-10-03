@@ -34,6 +34,7 @@ ________________________________________________________________________________
 Instead of installing and importing libraries in r seperately, we can do it in one go using the library pacman. It has a function p_load that allows for importing multiple libraries in one go! 
 
 ```{r Loading packages}
+
 # Install pacman first (only once):
 # install.packages("pacman")
 
@@ -53,6 +54,7 @@ You can use the class() function in R to check the data type of a variable.
 
 
 ```{r}
+
 # Adding values
 my_string <- "Hello World!!"
 my_integer <- 42
@@ -142,6 +144,7 @@ my_namedlist_own$sport
 In r we have to put the condition into a parenthesis () and wrap the whole statement in curly brackets {}
 
 ```{r}
+
 # The if statement
 
 x <- 5
@@ -152,6 +155,7 @@ if (x > 0) {
 ```
 
 ```{r}
+
 # The else statement
 
 x <- -3
@@ -165,6 +169,7 @@ if (x > 0) {
 ```
 
 ```{r}
+
 # The else if (elif) statement
 
 x <- 0
@@ -455,55 +460,50 @@ Subset the data set to include only rows where Sepal.Length is greater than the 
 Calculate the maximum and minimum of Sepal.Length in this subset and lastly calculate the mean of Petal.Length in this subset.
 
 ```{r} 
-#Make comments about the flaws so you remember if you stumble upon them agian
 
-median_sepal <- Median(iris$Sepal.Length)
+#Make comments about the flaws so you remember if you stumble upon them again
 
-subset_flowers <- subset(iris, Sepal.Length > median_sepal && Petal.Width < 1.5 & Species == "setosa")
+median_sepal <- median(iris$Sepal.Length) # median should be spelled with lower case letters.
 
-max_length <- max(subset_flowers$Sepal.Length
+subset_flowers <- subset(iris, Sepal.Length > median_sepal & Petal.Width < 1.5 & Species == "setosa") # we only need 1x "&" and not double "&&"
 
-min_length <- minimum(subset_flowers$Sepal.Length)
+max_length <- max(subset_flowers$Sepal.Length) # brackets should always be closed off
 
-mean_petals <- mean(Petal.Length, subset_flowers)
+min_length <- min(subset_flowers$Sepal.Length) # call function correctly - it's min() and not minimum
+
+mean_petals <- mean(subset_flowers$Petal.Length) # data set should be called first and then "$" to select column
 
 max_length
 min_length
 mean_petals
 
+# Since no rows fulfills the requirements, there are no max, min and mean to find within this subset.
+
 ```
 
 Exercise 2 
-In this exercise, you will write and use a function to filter the iris dataset. The function should:
+In this exercise, you will write and use a function to filter the iris data set. The function should:
 
 Take a species name and a minimum petal length as input.
+
 Return all rows where Species matches the input and Petal.Length is greater than the minimum.
+
 Then, loop over all unique species in the dataset and print the number of flowers returned for each.
 
 ```{r}
-filter_species <- function(species_name, min_petal) 
-  filtered <- subset(iris, Species = species_name & Petal.Length > min_petal)
+
+filter_species <- function(species_name, min_petal) {
+  filtered <- subset(iris, Species == species_name & Petal.Length > min_petal)
   return(filtered)
 }
 
-for (s in unique(iris$species)) {   
+for (s in unique(iris$Species)) {   
   flowers <- filter_species(s, 1.5)
   print(paste("Number of flowers for", s, "=", nrow(flowers)))
 }
 
+filter_species("virginica", 6.1)
+
 ```
 
-
-
 Juhuu - now you finished this translation markdown, so now you are super ready to write some r-code!!
-
-
-
-
-
-
-
-
-
-
-
