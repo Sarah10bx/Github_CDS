@@ -1,0 +1,93 @@
+---
+title: "Portfolio_2"
+output: html_document
+date: "05/10/2026"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loading packages}
+
+# Install pacman first (only once):
+install.packages("pacman")
+
+# Load and install packages:
+pacman::p_load(ggplot2, dplyr, tidyr, tidyverse, ggrepel, dslabs) #So it installs the library if needed + imports it in one step.
+
+```
+
+```{r loading dataset}
+
+divorce <- dslabs::divorce_margarine
+
+```
+
+
+# Correlation and Regression: 
+
+## PART 1: 
+
+Use the ‘divorce_margarine’ dataset from the ‘dslabs’ package to explore the relationship
+between margarine consumption and divorce rates in Maine.
+
+Visualize the data, make a correlation test. Report the correlation coefficient and p-value in APA format, and briefly discuss the results in a practical way.
+
+### Understand Data:
+
+```{r}
+
+head(divorce)
+
+```
+
+
+Our data set consists of 10 observation of 3 variables:
+- **divorce_rate_maine**
+- **margarine_consumption_per_capita**
+- **year**
+
+The focus will be exploring the relationship between margarine consumption and divorce rates in Maine.
+
+### Explore Distributions:
+
+First we'll plot a histogram for each of the two variables: 
+
+```{r}
+
+# Margarine consumption:
+ggplot(divorce, aes(x = margarine_consumption_per_capita)) + 
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "lightblue", color = "black") + 
+  geom_density(color = "red", size = 1) +
+  labs(title = "Distribution of Margarine Consumption per Capita", x = "Margarine Consumption", y = "Density")
+
+# Divorce rates: 
+ggplot(divorce, aes(x = divorce_rate_maine)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 20, fill = "lightgreen", color = "black") +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Distribution of Divorce Rates in Maine", x = "Divorce Rates", y = "Density")
+
+```
+
+
+
+## PART 2:
+
+Work with the ‘GSSvocab’ dataset from the ‘car’ package, focusing only on the year 1978
+(subset that year and exclude missing values). Investigate how vocabulary test scores (vocab)
+are related to education (educ). Present the relationship in a plot, fit a regression model, and
+report results in APA format (coefficients, p-values, and R2), followed by a short practical
+interpretation.
+
+Extend the analysis by making a new model, where you include whether a person is native-
+born (nativeBorn) as a predictor. Again, visualise and model the relationship.
+Consider whether education and native-born status interact in predicting vocabulary, and if
+so, fit an interaction model. For each model, report results in APA format and explain the
+practical meaning.
+
+Finally, compare the models and discuss which one performs best based on p-values and R2,
+as well as the real-world interpretability of the results
+
+
