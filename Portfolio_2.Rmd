@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 install.packages("pacman")
 
 # Load and install packages:
-pacman::p_load(ggplot2, dplyr, tidyr, tidyverse, ggrepel, dslabs) #So it installs the library if needed + imports it in one step.
+pacman::p_load(ggplot2, dplyr, tidyr, tidyverse, ggrepel, dslabs) # Installs the library if needed + imports it in one step
 
 ```
 
@@ -36,6 +36,8 @@ between margarine consumption and divorce rates in Maine.
 Visualize the data, make a correlation test. Report the correlation coefficient and p-value in APA format, and briefly discuss the results in a practical way.
 
 ### Understand Data:
+
+First, we have a quick look at the data:
 
 ```{r}
 
@@ -59,18 +61,85 @@ First we'll plot a histogram for each of the two variables:
 
 # Margarine consumption:
 ggplot(divorce, aes(x = margarine_consumption_per_capita)) + 
-  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "lightblue", color = "black") + 
+  geom_histogram(aes(y = after_stat(density)), bins = 10, fill = "lightblue", color = "black") + 
   geom_density(color = "red", size = 1) +
   labs(title = "Distribution of Margarine Consumption per Capita", x = "Margarine Consumption", y = "Density")
 
 # Divorce rates: 
 ggplot(divorce, aes(x = divorce_rate_maine)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 20, fill = "lightgreen", color = "black") +
+  geom_histogram(aes(y = after_stat(density)), bins = 10, fill = "lightgreen", color = "black") +
   geom_density(color = "red", size = 1) +
   labs(title = "Distribution of Divorce Rates in Maine", x = "Divorce Rates", y = "Density")
 
 ```
+Both of the histograms don't look completely normal, as they have a bit of a skew on the left side (positive skew).
 
+We can also have a look at the QQ-plots for each variable: 
+
+```{r}
+
+# Margarine consumption:
+ggplot(divorce, aes(sample = margarine_consumption_per_capita)) + 
+  stat_qq(color = "blue") +
+  stat_qq_line(color = "red") +
+  labs(title = "Q-Q Plot: Margarine Consumption per Capita")
+
+# Divorce rates: 
+ggplot(divorce, aes(sample = divorce_rate_maine)) +
+  stat_qq(color = "darkgreen") +
+  stat_qq_line(color = "red") +
+  labs(title = "Q-Q Plot: Divorce Rates in Maine")
+
+```
+Looking at the QQ-plots for each variable, the data now appears to look more normal, as the data follows the line nicely and doesn't deviate much. 
+
+Lastly, we'll try running a Shapiro-Wilk test to further investigate the normality of the data: 
+
+```{r}
+
+shapiro.test(divorce$margarine_consumption_per_capita)
+shapiro.test(divorce$divorce_rate_maine)
+
+```
+Both tests show p > 0.05, suggesting that the data can be treated as normal. Margarine consumption has a p-value of .2503, while divorce rates has a p-value of .07916 
+
+These results together with the plots suggests that we can treat the data as normal. Thus, no transformations will be done. 
+
+### Standardize Variables:
+
+Both variables will be standardized in order to sufficiently compare the units of measurements. 
+
+```{r}
+
+scaled_margarine <- scale(divorce$margarine_consumption_per_capita)
+
+scaled_divorce_rates <- scale(divorce$divorce_rate_maine)
+
+head(scaled_margarine)
+
+head(scaled_divorce_rates)
+
+```
+### Check Assumptions for Correlation:
+
+In order to do correlation, we need to check assumptions for a parametric test: 
+- **Normality of Distributed Data**
+- **Homogeneity of Variance** 
+- **Interval Data**
+- **Data are Independent**
+
+Given the above assumption and that we have no extreme outliers, we can assume the data is (approximately) normally distributed. Thus, we can proceed with a parametric test such as Pearson's correlation:
+
+```{r}
+
+cor.test(scaled_margarine, scaled_divorce_rates, method = "pearson")
+
+```
+Margarine consumption was found to be significantly correlated with divorce rates, r(8) = .9926, p = .0000000133, 95% CI [.9677, .9983]
+
+Since the p-value < 0.05, there's a statistical significance. Also, since the correlation is very close to 1, there's a strong relationship between the variable. 
+
+These results suggests that there's a high correlaton between the consumption of margarine and divorce rates in Maine. 
 
 
 ## PART 2:
@@ -89,5 +158,36 @@ practical meaning.
 
 Finally, compare the models and discuss which one performs best based on p-values and R2,
 as well as the real-world interpretability of the results
+
+### Regression Model 1: 
+
+```{r}
+
+# First, we'll download the package and load in the data set:
+
+pacman::p_load(carData)
+
+GSSvocab <- carData::GSSvocab
+
+```
+
+We'll start by subsetting the data, so we have only the year 1978 and no missing values: 
+
+```{r}
+
+# Subset year 1978: 
+
+GSSvocab_1978 <- subset(GSSvocab, year == 1978)
+
+# Remove missing values: 
+
+GSSvocab_1978 <- drop_na(GSSvocab_1978)
+
+```
+
+### Regression Model 2:
+
+
+### Comparing the Models:
 
 

@@ -208,7 +208,7 @@ if (x > 5) {
 
 ```
 
-*logical orerators*
+*logical operators*
 
 
 
